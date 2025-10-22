@@ -1,11 +1,12 @@
 const employees = require("../../models/employees/employee.model");
 
 const getAll = async (req, res) => {
-  if (employees.length > 0) {
+  const empData = await employees.find({});
+  if (empData.length > 0) {
     res.json({
       status: 200,
       message: "data retirved successfully",
-      data: employees,
+      data: empData,
     });
   } else {
     res.json({
@@ -17,13 +18,12 @@ const getAll = async (req, res) => {
 };
 
 const getById = async (req, res) => {
-  //   const { id } = req.params;
-  const { id } = req.query;
-  const emp = employees.find((emp) => {
-    if (emp.id == id) {
-      return emp;
-    }
-  });
+  const { id } = req.params;
+  //   const { id } = req.query;
+  console.log("id :", id);
+  //   const emp = await employees.findOne({ _id: id });
+  const emp = await employees.findById(id);
+  console.log("emp:", JSON.stringify(emp));
   if (emp) {
     res.json({
       status: 200,
@@ -40,12 +40,19 @@ const getById = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { name, age } = req.body;
+  //   const { name, age, email, password } = req.body;
+  //   const empData = await employees.create({
+  //     name: name,
+  //     age: age,
+  //     email: email,
+  //     password: password,
+  //   });
 
-  if (name && age) {
-    const id = employees.length + 1;
-    const empData = [...employees, { id: id, name: name, age: age }];
+  //! insertMany()
+  const data = req.body;
+  const empData = await employees.insertMany(data);
 
+  if (empData.length > 0) {
     res.json({
       message: "employee created successfully",
       data: empData,
@@ -59,38 +66,36 @@ const create = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { id } = req.params;
-  const { age } = req.body;
+  //   const { id } = req.params;
+  //   const { age } = req.body;
+  //   const updatedEmp=await employees.updateOne({_id:id},{$set:{age:age}})
+  //   const updatedEmp = await employees.findOneAndUpdate(
+  //     { _id: id },
+  //     { $set: { age: age } },
+  //     { new: true }
+  //   );
+  const { age } = req.params;
+  const { empAge } = req.body;
+  const empdata = await employees.updateMany(
+    { age: age },
+    { $set: { age: empAge } }
+  );
 
-  const empData = employees.map((emp) => {
-    if (emp.id == id) {
-      return { ...emp, age: age };
-    } else {
-      return emp;
-    }
-  });
-  if (empData.length > 0) {
+  if (empdata) {
     res.json({
       message: "empl updated successfully",
-      data: empData,
+      data: empdata,
     });
   }
 };
 
+const empDelete = async (req, res) => {
+  const { id } = req.params;
+  const empData = await employees.deleteOne({_id:id},{new:true})
+  res.json({
+    message: "employee deleted successfully",
+    data: empData,
+  });
+};
 
-const empDelete=async (req,res)=>{
-    const {id}=req.params
-    const empData=employees.filter((emp)=>{
-        if(emp.id!=id){
-            return emp
-        }
-    })
-    res.json({
-        message:"employee deleted successfully",
-        data:empData
-    })
-    
-
-}
-
-module.exports = { getAll, getById, create, update ,empDelete};
+module.exports = { getAll, getById, create, update, empDelete };

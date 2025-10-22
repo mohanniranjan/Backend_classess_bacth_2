@@ -11,8 +11,9 @@ const empRouter = express.Router();
 
 empRouter.get("/getAll", getAll);
 // empRouter.get("/getById/:id",getById)
-empRouter.get("/getById", getById);
+empRouter.get("/getById/:id", getById);
 empRouter.post("/create", create);
-empRouter.put("/update/:id", update);
+// empRouter.put("/update/:id", update);
+ empRouter.put("/update/:age", update);
 empRouter.delete("/delete/:id", empDelete);
 module.exports = empRouter;
