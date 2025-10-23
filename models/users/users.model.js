@@ -13,6 +13,7 @@ const addressSchema = mongoose.Schema({
 
 const address = mongoose.model("address", addressSchema);
 
+
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -20,8 +21,6 @@ const userSchema = mongoose.Schema({
   address: { type: mongoose.Schema.Types.ObjectId, ref: "address" },
 });
 
+const users = mongoose.model("users", userSchema);
 
-const users=mongoose.model("users",userSchema)
-
-
-module.exports={address,users}
+module.exports = { address, users };
