@@ -102,6 +102,7 @@ const empDelete = async (req, res) => {
 
 const empRegister = async (req, res) => {
   const { name, age, email, password } = req.body;
+  const file=req.file
   const hashsedPassword = await bcrypt.hash(password, 10);
   const emp = await employees.findOne({ email: email });
   if (emp) {
@@ -114,6 +115,7 @@ const empRegister = async (req, res) => {
       age: age,
       email: email,
       password: hashsedPassword,
+      image:file.filename
     });
 
     if (empData) {
@@ -160,7 +162,7 @@ const empLogin = async (req, res) => {
   const isMatchedPassword = await bcrypt.compare(password, emp.password);
   if (emp && isMatchedPassword) {
     const token=await jwt.sign(
-      { name: emp.name, age: emp.age, email: emp.email },
+      { name: emp.name, age: emp.age, email: emp.email ,image:emp.image},
       process.env.SCRET_KEY,
       {
         expiresIn:"10m"
@@ -178,7 +180,7 @@ const empLogin = async (req, res) => {
 };
 const empDashboard = async (req, res) => {
   const empdata = req.empData;
-  const role = "user";
+  const role = "admin";
   if (role == "admin" && empdata) {
     res.json({
       message: "welcome to dashboard",

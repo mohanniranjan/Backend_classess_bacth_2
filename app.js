@@ -5,9 +5,15 @@ const dbConfig = require("./configurations/db.config");
 const cookieParser=require("cookie-parser");
 const userRouter = require("./routes/users/users.routes");
 const postRouter = require("./routes/posts/posts.routes");
+const cors = require('cors')
+const path=require("path")
 const app = express();
 dotenv.config();
 app.use(cookieParser())
+app.use(cors({
+  origin:"http://localhost:5173",
+  credentials:true
+}))
 
 const dbConnection = async () => {
   try {
@@ -20,6 +26,7 @@ const dbConnection = async () => {
 
 dbConnection();
 app.use(express.json());
+app.use('/uploadedimages',express.static(path.join(__dirname,"uploads")))
 app.use("/v1/employees", empRouter);
 app.use("/v1/users",userRouter)
 app.use("/v1/posts",postRouter)

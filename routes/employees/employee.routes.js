@@ -10,6 +10,7 @@ const {
   empDashboard,
 } = require("../../controllers/employees/employee.controller");
 const authMidddleware = require("../../middleware/auth.middleware");
+const upload = require("../../configurations/multer.config");
 
 const empRouter = express.Router();
 
@@ -20,7 +21,7 @@ empRouter.post("/create", create);
 // empRouter.put("/update/:id", update);
 empRouter.put("/update/:age", update);
 empRouter.delete("/delete/:id", empDelete);
-empRouter.post("/empRegister", empRegister);
+empRouter.post("/empRegister",upload.single("image"), empRegister);
 empRouter.post('/empLogin',empLogin)
 empRouter.get('/empDashboard',authMidddleware,empDashboard)
 module.exports = empRouter;

@@ -1,4 +1,5 @@
 const mongoose=require("mongoose")
+const { type } = require("os")
 
 const empSchema=mongoose.Schema({
     name:{
@@ -16,6 +17,8 @@ const empSchema=mongoose.Schema({
     password:{
         type:String,
         required:true
+    },image:{
+        type:String,
     }
 
     
